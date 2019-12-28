@@ -1,0 +1,6 @@
+.vscode/
+images/*
+!images/.gitkeep
+venv/
+video/*
+!video/.gitkeep

@@ -1,0 +1,8 @@
+.git/
+.vscode/
+images/*
+venv/
+video/*
+.dockerignore
+.gitignore
+Dockerfile
