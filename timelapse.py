@@ -6,7 +6,7 @@ import requests
 import cv2
 
 
-def cleanup():
+def cleanup(_=None, __=None):
     print('Concatenating images into a timelapse')
     try:
         concat()
@@ -20,21 +20,26 @@ def cleanup():
 
 signal.signal(signal.SIGTERM, cleanup)
 
+FRAMECOUNT = 0
+
 
 def main():
-    framecount = 0
+    global FRAMECOUNT
     try:
         while True:
             start = time.time()
             image_response = requests.get(os.getenv('IMAGE_URL'), verify=False)
             if image_response.status_code == 200:
-                with open(f'images/{framecount}', 'wb') as fd:
+                with open(f'images/{FRAMECOUNT}', 'wb') as fd:
                     for chunk in image_response.iter_content(chunk_size=512):
                         fd.write(chunk)
-                framecount += 1
+                FRAMECOUNT += 1
             time.sleep(60-((time.time())-start))
     except KeyboardInterrupt:
         cleanup()
+    except Exception:
+        # If it errors (router reboot, etc) restart it
+        main()
 
 
 def concat():
